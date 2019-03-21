@@ -78,6 +78,8 @@ app.get('/chart', (req, res) => {
   
   request({rejectUnauthorized: false,url:url, json:true}, function (error, response, body) {
     charterror = error;
+    console.log(error);
+    console.log(body);
     chart = body;
   });
 
