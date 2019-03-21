@@ -74,10 +74,17 @@ app.get('/chart', (req, res) => {
   url = decodeURIComponent(req.query.c);
 
   let chart;
+  let charterror;
   
   request({rejectUnauthorized: false,url:url, json:true}, function (error, response, body) {
+    charterror = error;
     chart = body;
   });
+
+  if(charterror) {
+    failPng(res, charterror);
+    return;
+  }
 
   if (chart.type === 'donut') {
     // Fix spelling...
