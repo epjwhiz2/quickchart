@@ -76,15 +76,11 @@ app.get('/chart', (req, res) => {
   let chart;
   let charterror;
   
-  request({rejectUnauthorized: false,url:url, json:true}, function (error, response, body) {
-    charterror = error;
-    console.log(error);
-    console.log(body);
+request({rejectUnauthorized: false,url:url, json:true}, function (error, response, body) {
     chart = body;
-  });
 
-  if(charterror) {
-    failPng(res, charterror);
+  if(error) {
+    failPng(res, error);
     return;
   }
 
@@ -181,6 +177,7 @@ app.get('/chart', (req, res) => {
   } finally {
     canvasRenderService.destroy();
   }
+});
 });
 
 app.get('/qr', (req, res) => {
