@@ -9,6 +9,7 @@ const qrcode = require('qrcode');
 const text2png = require('text2png');
 const winston = require('winston');
 const { NodeVM } = require('vm2');
+const request = require('request');;
 
 const { addBackgroundColors } = require('./charts');
 
@@ -69,28 +70,14 @@ app.get('/chart', (req, res) => {
     }
   }
 
-  let untrustedInput;
-  try {
-    untrustedInput = decodeURIComponent(req.query.c);
-  } catch (err) {
-    logger.error('URI malformed', err);
-    failPng(res, 'URI malformed');
-    return;
-  }
+  let url;
+  url = decodeURIComponent(req.query.c);
 
   let chart;
-  try {
-    if (untrustedInput.match(/(for|while)\(/gi)) {
-      failPng(res, 'Input is not allowed');
-      return;
-    }
-    const vm = new NodeVM();
-    chart = vm.run(`module.exports = ${untrustedInput}`);
-  } catch (err) {
-    logger.error('Input Error', err);
-    failPng(res, `Invalid input\n${err}`);
-    return;
-  }
+  
+  request({url:url, json:true}, function (error, response, body) {
+    chart = body;
+  });
 
   if (chart.type === 'donut') {
     // Fix spelling...
