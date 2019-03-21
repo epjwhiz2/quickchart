@@ -75,7 +75,7 @@ app.get('/chart', (req, res) => {
 
   let chart;
   
-  request({url:url, json:true}, function (error, response, body) {
+  request({rejectUnauthorized: false,url:url, json:true}, function (error, response, body) {
     chart = body;
   });
 
