@@ -76,11 +76,16 @@ app.get('/chart', (req, res) => {
   let chart;
   let charterror;
   
-request({rejectUnauthorized: false,url:url, json:true}, function (error, response, body) {
+request({rejectUnauthorized: false,url:url}, function (error, response, body) {
     chart = body;
 
   if(error) {
     failPng(res, error);
+    return;
+  }
+
+  if(typeof chart !== 'object') {
+    failPng(res, 'Failed to retrieve data');
     return;
   }
 
