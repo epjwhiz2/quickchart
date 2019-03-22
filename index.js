@@ -100,7 +100,7 @@ app.get('/chart', (req, res) => {
             chart = vm.run(`module.exports = ${untrustedInput}`);
             processChart(chart);
         } else {
-            request({agent: false, pool: {maxSockets: 100}, rejectUnauthorized: false, url: untrustedInput, timeout: 2000}, function (error, response, body) {
+            request({agent: false, pool: {maxSockets: 100}, rejectUnauthorized: false, url: untrustedInput, timeout: 10000}, function (error, response, body) {
                 if (error) {
                     failPng(res, error);
                     return;
