@@ -97,7 +97,8 @@ app.get('/chart', (req, res) => {
             chart = vm.run(`module.exports = ${untrustedInput}`);
             processChart(chart);
         } else {
-            request({ agent:false, rejectUnauthorized: false, url: untrustedInput, timeout: 120 }, function (error, response, body) {
+            var pool = new https.Agent({ keepAlive: true });
+            request({ agent:pool, rejectUnauthorized: false, url: untrustedInput, timeout: 120 }, function (error, response, body) {
                 if (error) {
                     failPng(res, error);
                     return;
