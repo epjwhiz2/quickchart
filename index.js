@@ -1,6 +1,8 @@
 const path = require('path');
 const http = require('http');
-http.globalAgent.maxSockets = 25;
+http.globalAgent.maxSockets = Infinity;
+const https = require('https');
+https.globalAgent.maxSockets = Infinity;
 const { CanvasRenderService } = require('chartjs-node-canvas');
 const chartDataLabels = require('chartjs-plugin-datalabels');
 const chartRadialGauge = require('chartjs-chart-radial-gauge');
@@ -98,8 +100,7 @@ app.get('/chart', (req, res) => {
             chart = vm.run(`module.exports = ${untrustedInput}`);
             processChart(chart);
         } else {
-            var pool = new http.Agent({ keepAlive: true });
-            request({ agent:pool, rejectUnauthorized: false, url: untrustedInput, timeout: 120 }, function (error, response, body) {
+            request({ rejectUnauthorized: false, url: untrustedInput, timeout: 120 }, function (error, response, body) {
                 if (error) {
                     failPng(res, error);
                     return;
