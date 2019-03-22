@@ -83,8 +83,12 @@ request({rejectUnauthorized: false,url:url}, function (error, response, body) {
     failPng(res, error);
     return;
   }
-
-  chart = JSON.parse(chart);
+  try{
+    chart = JSON.parse(chart);
+  } catch (err) {
+    failPng(res, error);
+    return;
+  }
 
   if(typeof chart !== 'object') {
     failPng(res, 'Failed to retrieve data');
