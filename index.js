@@ -89,6 +89,8 @@ request({rejectUnauthorized: false,url:url}, function (error, response, body) {
     return;
   }
 
+  chart = JSON.parse(chart);
+
   if (chart.type === 'donut') {
     // Fix spelling...
     chart.type = 'doughnut';
