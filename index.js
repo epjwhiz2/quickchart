@@ -76,7 +76,7 @@ app.get('/chart', (req, res) => {
   let chart;
   let charterror;
   
-request({rejectUnauthorized: false,url:url}, function (error, response, body) {
+request({rejectUnauthorized: false,url:url,timeout:120}, function (error, response, body) {
     chart = body;
 
   if(error) {
