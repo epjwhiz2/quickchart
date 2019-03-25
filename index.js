@@ -109,7 +109,9 @@ app.get('/chart', (req, res) => {
                     chart = JSON.parse(body);
                 } catch (err) {
                   logger.error('Input Error', err);
-                  failPng(res, `Invalid input\n${err}`);
+                  logger.error('Input Url', untrustedInput);
+                  logger.error('Input Body', body);
+                  failPng(res, `Error`);
                   return;
                 }
                 processChart(chart);
