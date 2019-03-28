@@ -78,10 +78,10 @@ app.get('/chart', (req, res) => {
             untrustedInput = decodeURIComponent(req.query.c);
         } else if(req.query.t) {
             untrustedInput = {
-                'template' : decodeURIComponent(req.query.t),
-                'labels' : JSON.parse(decodeURIComponent(req.query.k)),
-                'values' : JSON.parse(decodeURIComponent(req.query.v)),
-                'colors' : JSON.parse(decodeURIComponent(req.query.z))
+                template : decodeURIComponent(req.query.t),
+                labels : JSON.parse(decodeURIComponent(req.query.k)),
+                values : JSON.parse(decodeURIComponent(req.query.v)),
+                colors : JSON.parse(decodeURIComponent(req.query.z))
             }
         } else {
             untrustedInput = decodeURIComponent(req.query.url);
@@ -222,6 +222,7 @@ app.get('/chart', (req, res) => {
                     };
                 break;
             }
+            processChart(chart);
         } else {
             request({rejectUnauthorized: false, url: untrustedInput, timeout: 10000}, function (error, response, body) {
                 if (error) {
