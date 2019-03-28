@@ -49,7 +49,7 @@ function failPng(res, msg) {
 }
 
 app.get('/chart', (req, res) => {
-    if (!req.query.c && !req.query.url) {
+    if (!req.query.c && !req.query.url && !req.query.t) {
         failPng(res, 'Invalid request');
         return;
     }
@@ -76,6 +76,13 @@ app.get('/chart', (req, res) => {
     try {
         if (req.query.c) {
             untrustedInput = decodeURIComponent(req.query.c);
+        } else if(req.query.t) {
+            untrustedInput = {
+                'template' : decodeURIComponent(req.query.t),
+                'labels' : JSON.parse(decodeURIComponent(req.query.k)),
+                'values' : JSON.parse(decodeURIComponent(req.query.v)),
+                'colors' : JSON.parse(decodeURIComponent(req.query.z))
+            }
         } else {
             untrustedInput = decodeURIComponent(req.query.url);
         }
@@ -95,6 +102,126 @@ app.get('/chart', (req, res) => {
             const vm = new NodeVM();
             chart = vm.run(`module.exports = ${untrustedInput}`);
             processChart(chart);
+        } else if(req.query.t) {
+            switch(untrustedInput.template) {
+                case 'pie':
+                    chart = {
+                        type : 'pie',
+                        data : {
+                            labels : untrustedInput.labels,            
+                            datasets : [
+                                {
+                                    data : untrustedInput.values,
+                                    backgroundColor : untrustedInput.colors
+                                }
+                            ]
+                        },
+                        options : {
+                            legend : {
+                                display : false,
+                                labels : {
+                                    fontSize : 6,
+                                    boxWidth : 10,
+                                    padding : 8
+                                }
+                            },
+                            plugins : {
+                                datalabels : {
+                                    display : false
+                                }
+                            }
+                        }
+                    };
+                break;
+                case 'doughnut':
+                    chart = {
+                        type : 'doughnut',
+                        data : {
+                            labels : untrustedInput.labels,            
+                            datasets : [
+                                {
+                                    data : untrustedInput.values,
+                                    backgroundColor : untrustedInput.colors
+                                }
+                            ]
+                        },
+                        options : {
+                            legend : {
+                                display : false,
+                                labels : {
+                                    fontSize : 6,
+                                    boxWidth : 10,
+                                    padding : 8
+                                }
+                            },
+                            plugins : {
+                                datalabels : {
+                                    display : false
+                                }
+                            }
+                        }
+                    };
+                break;
+                case 'bar':
+                    chart = {
+                        type : 'bar',
+                        data : {
+                            labels : untrustedInput.labels,            
+                            datasets : [
+                                {
+                                    data : untrustedInput.values,
+                                    backgroundColor : untrustedInput.colors
+                                }
+                            ]
+                        },
+                        options : {
+                            legend : {
+                                display : false
+                            },
+                            scales : {
+                                xAxes: [
+                                    {
+                                        ticks:{
+                                            fontSize : 8
+                                        },
+                                        gridLines:{
+                                            display : false
+                                        }
+                                    }
+                                ],                                
+                                yAxes: [
+                                    {
+                                        ticks:{
+                                            fontSize : 8
+                                        },
+                                        gridLines:{
+                                            display : false
+                                        }
+                                    }
+                                ]
+                            }
+                        }
+                    };
+                break;
+                case 'line':
+                    chart = {
+                        type : 'line',
+                        data : {
+                            labels : untrustedInput.labels,            
+                            datasets : [
+                                {
+                                    data : untrustedInput.values
+                                }
+                            ]
+                        },
+                        options : {
+                            legend : {
+                                display : false
+                            }
+                        }
+                    };
+                break;
+            }
         } else {
             request({rejectUnauthorized: false, url: untrustedInput, timeout: 10000}, function (error, response, body) {
                 if (error) {
