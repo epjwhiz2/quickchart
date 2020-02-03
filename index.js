@@ -66,20 +66,20 @@ function createLabelsFromData(data, type){
 				labels.push(hour + ampm);
 			}
 		break;
-		case '7days':
-			for(i = -8; i < -1; i++){
-				var day = new Date(today.getTime() + (1000 * 60 * 60 * 24 * i));
-				var month = day.getMonth() + 1;
+        case '7days':
+			for(i = -7; i < 0; i++){
+                var day = new Date(data.time * 1000 + (1000 * 60 * 60 * 24 * i));
+				var month = day.getMonth();
 				if(month < 10){
 					month = '0' + month;
 				}
-				var date = day.getDate() + 1;
+				var date = day.getDate();
 				if(date < 10){
 					date = '0' + date;
 				}
 				day = day.getFullYear() + '-' + month + '-' + date;
 				labels.push(day);
-			}
+            }
 		break;
 		case '9weeks':
 			for(i = -9; i < 0; i++){				
